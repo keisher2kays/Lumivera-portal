@@ -1,38 +1,124 @@
-.App {
-  text-align: center;
+.nav-logo-img{
+    position: relative;
+    top: 38px;
+    height: 193px;
+    width: auto;
+}
+/* src/AdminDashboard.css */
+
+/* ============ Base sizing bump for normal/desktop screens ============ */
+.admin-container {
+  font-size: 1.02rem;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.admin-header h2 {
+  font-size: 1.6rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.admin-status-badge {
+  font-size: 0.9rem;
+}
+
+.admin-tab-btn {
+  font-size: 0.95rem;
+}
+
+/* Let tables scroll horizontally instead of squashing on narrow containers */
+.admin-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.admin-table-wrap table {
+  min-width: 640px;
+}
+
+/* ============ Large desktop — make things a bit bigger ============ */
+@media (min-width: 1400px) {
+  .admin-container {
+    padding: 32px 60px !important;
+    font-size: 1.08rem;
+  }
+  .admin-header h2 {
+    font-size: 1.9rem;
+  }
+  .admin-status-badge {
+    font-size: 1rem;
+    padding: 8px 16px;
+  }
+  .admin-tab-btn {
+    font-size: 1.05rem;
+    padding: 12px 22px !important;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* ============ Tablet ============ */
+@media (max-width: 900px) {
+  .admin-chat-layout {
+    grid-template-columns: 1fr !important;
   }
-  to {
-    transform: rotate(360deg);
+  .admin-alerts-panel {
+    min-height: unset !important;
+  }
+}
+
+/* ============ Mobile ============ */
+@media (max-width: 640px) {
+  .admin-container {
+    padding: 14px !important;
+  }
+
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px;
+  }
+
+  .admin-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .admin-logo-img {
+    height: 28px !important;
+  }
+
+  .admin-status-badge {
+    font-size: 0.75rem;
+    padding: 5px 10px;
+  }
+
+  .admin-nav-tabs {
+    flex-wrap: wrap;
+    gap: 8px !important;
+  }
+
+  .admin-tab-btn {
+    flex: 1 1 calc(50% - 8px);
+    font-size: 0.78rem;
+    padding: 8px 10px !important;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .admin-chat-layout {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .admin-chat-window {
+    height: 420px !important;
+  }
+
+  .admin-table-card {
+    padding: 14px !important;
+  }
+
+  .admin-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .admin-table-wrap table {
+    font-size: 0.8rem;
+    min-width: 560px;
   }
 }

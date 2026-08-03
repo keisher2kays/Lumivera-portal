@@ -1,10 +1,159 @@
 
 
+// import React, { useState, useEffect, useCallback } from 'react';
+
+// export default function UserManagement({ currentUser }) {
+//   const [users, setUsers] = useState([]);
+//   const [formData, setFormData] = useState({ name: '', username: '', password: '', role: 'sales_rep' });
+//   const [error, setError] = useState('');
+//   const [success, setSuccess] = useState('');
+
+//   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+//   const activeUser = currentUser || JSON.parse(localStorage.getItem('lumivera_user') || localStorage.getItem('user') || '{}');
+
+//   const fetchUsers = useCallback(async () => {
+//     try {
+//       const response = await fetch(`${BACKEND_URL}/api/admin/users`, {
+//         headers: { 'Content-Type': 'application/json', 'x-user-role': activeUser?.role || '' }
+//       });
+//       const data = await response.json();
+//       if (response.ok) setUsers(Array.isArray(data) ? data : []);
+//       else setError(data.message || 'Failed to fetch users');
+//     } catch { setError('Server error loading users.'); }
+//   }, [BACKEND_URL, activeUser?.role]);
+
+//   useEffect(() => { fetchUsers(); }, [fetchUsers]);
+
+//   const handleCreateUser = async (e) => {
+//     e.preventDefault();
+//     setError(''); setSuccess('');
+//     try {
+//       const res = await fetch(`${BACKEND_URL}/api/admin/users`, {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json', 'x-user-role': activeUser?.role || '' },
+//         body: JSON.stringify(formData)
+//       });
+//       const data = await res.json();
+//       if (res.ok) {
+//         setSuccess('User created successfully!');
+//         setFormData({ name: '', username: '', password: '', role: 'sales_rep' });
+//         fetchUsers();
+//       } else setError(data.message || 'Error creating user');
+//     } catch { setError('Server connection error.'); }
+//   };
+
+//   const handleDeleteUser = async (userId) => {
+//     if (!window.confirm('Are you sure?')) return;
+//     try {
+//       const res = await fetch(`${BACKEND_URL}/api/admin/users/${userId}`, {
+//         method: 'DELETE', headers: { 'x-user-role': activeUser?.role || '' }
+//       });
+//       const data = await res.json();
+//       if (res.ok) { setSuccess('User deleted.'); fetchUsers(); }
+//       else setError(data.message || 'Failed to delete');
+//     } catch { setError('Server connection error.'); }
+//   };
+
+//   return (
+//     <div style={{ width: '100%' }}>
+//       <h2 style={{ color: '#F8FAFC' }}>👥 Team Management</h2>
+//       <p style={{ color: '#94A3B8' }}>Manage portal access for sales representatives and administrators.</p>
+
+//       {error && <div style={styles.alertErr}>{error}</div>}
+//       {success && <div style={styles.alertOk}>{success}</div>}
+
+//       <form onSubmit={handleCreateUser} style={styles.card}>
+//         <h3 style={styles.cardTitle}>Add New Team Member</h3>
+//         <div style={styles.formGrid}>
+//           <input style={styles.input} placeholder="Full Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
+//           <input style={styles.input} placeholder="Username" value={formData.username} onChange={e => setFormData({...formData, username: e.target.value})} required />
+//           <input style={styles.input} type="password" placeholder="Password" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} required />
+//           <select style={styles.input} value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})}>
+//             <option value="sales_rep">Sales Representative</option>
+//             <option value="admin">Administrator</option>
+//           </select>
+//         </div>
+//         <button type="submit" style={styles.createBtn}>+ Create Member</button>
+//       </form>
+
+//       <div style={styles.card}>
+//         <h3 style={styles.cardTitle}>Existing Team Members</h3>
+        
+//         {/* TABLE HEADER - stretched */}
+//         <div style={styles.tableHeaderRow}>
+//           <span style={styles.th}>NAME</span>
+//           <span style={styles.th}>USERNAME</span>
+//           <span style={styles.th}>ROLE</span>
+//           <span style={{...styles.th, textAlign: 'right'}}>ACTIONS</span>
+//         </div>
+
+//         {/* TABLE BODY - stretched */}
+//         <div style={styles.tableBody}>
+//           {users.length === 0 ? (
+//             <div style={styles.empty}>No team members found.</div>
+//           ) : (
+//             users.map(u => (
+//               <div key={u._id} style={styles.tr}>
+//                 <span style={styles.tdName}><strong>{u.name}</strong></span>
+//                 <span style={styles.td}>{u.username}</span>
+//                 <span style={styles.td}>
+//                   <span style={{...styles.badge, background: u.role === 'admin' ? '#0EA5E9' : '#334155'}}>
+//                     {u.role?.toUpperCase()}
+//                   </span>
+//                 </span>
+//                 <span style={{...styles.td, textAlign: 'right'}}>
+//                   <button onClick={() => handleDeleteUser(u._id)} style={styles.delBtn}>Delete</button>
+//                 </span>
+//               </div>
+//             ))
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// const styles = {
+//   card: { background: '#1E293B', padding: '24px', borderRadius: '12px', marginBottom: '24px', width: '100%', boxSizing: 'border-box' },
+//   cardTitle: { marginTop: 0, color: '#F8FAFC', marginBottom: '16px' },
+//   formGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' },
+//   input: { padding: '14px', borderRadius: '8px', border: '1px solid #334155', background: '#F8FAFC', color: '#0F172A', fontSize: '0.95rem' },
+//   createBtn: { marginTop: '16px', background: '#2CA636', color: '#FFF', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' },
+
+//   // THIS IS THE FIX - grid spreads across 100%
+//   tableHeaderRow: {
+//     display: 'grid',
+//     gridTemplateColumns: '2fr 1.2fr 1fr 0.8fr', // spreads content across full div
+//     width: '100%',
+//     padding: '12px 8px',
+//     borderBottom: '1px solid #334155',
+//   },
+//   tableBody: { width: '100%' },
+//   tr: {
+//     display: 'grid',
+//     gridTemplateColumns: '2fr 1.2fr 1fr 0.8fr', // same as header
+//     width: '100%',
+//     alignItems: 'center',
+//     padding: '16px 8px',
+//     borderBottom: '1px solid #1E293B',
+//   },
+//   th: { color: '#64748B', fontSize: '0.8rem', fontWeight: '700', letterSpacing: '0.05em' },
+//   td: { color: '#CBD5E1', fontSize: '0.95rem' },
+//   tdName: { color: '#F8FAFC', fontSize: '0.95rem' },
+//   badge: { padding: '4px 10px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: '700', color: '#FFF' },
+//   delBtn: { background: '#DC2626', color: '#FFF', border: 'none', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' },
+//   empty: { padding: '20px 8px', color: '#94A3B8' },
+//   alertErr: { background: '#7F1D1D', color: '#FECACA', padding: '12px', borderRadius: '6px', marginBottom: '15px' },
+//   alertOk: { background: '#064E3B', color: '#A7F3D0', padding: '12px', borderRadius: '6px', marginBottom: '15px' },
+// };
+
 import React, { useState, useEffect, useCallback } from 'react';
 
 export default function UserManagement({ currentUser }) {
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({ name: '', username: '', password: '', role: 'sales_rep' });
+  const [showAddPass, setShowAddPass] = useState(false);
+  const [visibleMap, setVisibleMap] = useState({});
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -13,20 +162,18 @@ export default function UserManagement({ currentUser }) {
 
   const fetchUsers = useCallback(async () => {
     try {
-      const response = await fetch(`${BACKEND_URL}/api/admin/users`, {
+      const res = await fetch(`${BACKEND_URL}/api/admin/users`, {
         headers: { 'Content-Type': 'application/json', 'x-user-role': activeUser?.role || '' }
       });
-      const data = await response.json();
-      if (response.ok) setUsers(Array.isArray(data) ? data : []);
-      else setError(data.message || 'Failed to fetch users');
+      const data = await res.json();
+      if (res.ok) setUsers(Array.isArray(data)? data : []);
     } catch { setError('Server error loading users.'); }
   }, [BACKEND_URL, activeUser?.role]);
 
   useEffect(() => { fetchUsers(); }, [fetchUsers]);
 
   const handleCreateUser = async (e) => {
-    e.preventDefault();
-    setError(''); setSuccess('');
+    e.preventDefault(); setError(''); setSuccess('');
     try {
       const res = await fetch(`${BACKEND_URL}/api/admin/users`, {
         method: 'POST',
@@ -37,75 +184,103 @@ export default function UserManagement({ currentUser }) {
       if (res.ok) {
         setSuccess('User created successfully!');
         setFormData({ name: '', username: '', password: '', role: 'sales_rep' });
+        setShowAddPass(false);
         fetchUsers();
       } else setError(data.message || 'Error creating user');
     } catch { setError('Server connection error.'); }
   };
 
-  const handleDeleteUser = async (userId) => {
-    if (!window.confirm('Are you sure?')) return;
+  const handleDeleteUser = async (id) => {
+    if (!window.confirm('Delete this user?')) return;
     try {
-      const res = await fetch(`${BACKEND_URL}/api/admin/users/${userId}`, {
+      const res = await fetch(`${BACKEND_URL}/api/admin/users/${id}`, {
         method: 'DELETE', headers: { 'x-user-role': activeUser?.role || '' }
       });
-      const data = await res.json();
       if (res.ok) { setSuccess('User deleted.'); fetchUsers(); }
-      else setError(data.message || 'Failed to delete');
+      else { const d = await res.json(); setError(d.message); }
     } catch { setError('Server connection error.'); }
   };
 
+  const toggleRow = (id) => setVisibleMap(p => ({...p, [id]:!p[id] }));
+
   return (
-    <div style={{ width: '100%' }}>
-      <h2 style={{ color: '#F8FAFC' }}>👥 Team Management</h2>
-      <p style={{ color: '#94A3B8' }}>Manage portal access for sales representatives and administrators.</p>
+    <div style={styles.container}>
+      <h2 style={styles.title}>👥 Team Management</h2>
+      <p style={styles.subtitle}>Manage portal access for sales representatives and administrators.</p>
 
-      {error && <div style={styles.alertErr}>{error}</div>}
-      {success && <div style={styles.alertOk}>{success}</div>}
+      {error && <div style={styles.err}>{error}</div>}
+      {success && <div style={styles.ok}>{success}</div>}
 
+      {/* ADD FORM */}
       <form onSubmit={handleCreateUser} style={styles.card}>
-        <h3 style={styles.cardTitle}>Add New Team Member</h3>
-        <div style={styles.formGrid}>
+        <h3 style={styles.cardH}>Add New Team Member</h3>
+        <div style={styles.grid}>
           <input style={styles.input} placeholder="Full Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
           <input style={styles.input} placeholder="Username" value={formData.username} onChange={e => setFormData({...formData, username: e.target.value})} required />
-          <input style={styles.input} type="password" placeholder="Password" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} required />
+
+          <div style={styles.passWrap}>
+            <input
+              style={{...styles.input, width: '100%', paddingRight: '44px'}}
+              type={showAddPass? 'text' : 'password'}
+              placeholder="Password"
+              value={formData.password}
+              onChange={e => setFormData({...formData, password: e.target.value})}
+              required
+            />
+            <button type="button" onClick={() => setShowAddPass(!showAddPass)} style={styles.eyeBtn}>
+              {showAddPass? '🙈' : '👁️'}
+            </button>
+          </div>
+
           <select style={styles.input} value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})}>
             <option value="sales_rep">Sales Representative</option>
             <option value="admin">Administrator</option>
           </select>
         </div>
-        <button type="submit" style={styles.createBtn}>+ Create Member</button>
+        <button type="submit" style={styles.addBtn}>+ Create Member</button>
       </form>
 
+      {/* EXISTING - FULL WIDTH FIX */}
       <div style={styles.card}>
-        <h3 style={styles.cardTitle}>Existing Team Members</h3>
-        
-        {/* TABLE HEADER - stretched */}
-        <div style={styles.tableHeaderRow}>
-          <span style={styles.th}>NAME</span>
-          <span style={styles.th}>USERNAME</span>
-          <span style={styles.th}>ROLE</span>
-          <span style={{...styles.th, textAlign: 'right'}}>ACTIONS</span>
-        </div>
+        <h3 style={styles.cardH}>Existing Team Members</h3>
+        <div style={styles.tableWrap}>
+          <div style={styles.thead}>
+            <span>NAME</span>
+            <span>USERNAME</span>
+            <span>ROLE</span>
+            <span>PASSWORD</span>
+            <span style={{textAlign:'right'}}>ACTIONS</span>
+          </div>
 
-        {/* TABLE BODY - stretched */}
-        <div style={styles.tableBody}>
-          {users.length === 0 ? (
+          {users.length === 0? (
             <div style={styles.empty}>No team members found.</div>
           ) : (
-            users.map(u => (
-              <div key={u._id} style={styles.tr}>
-                <span style={styles.tdName}><strong>{u.name}</strong></span>
-                <span style={styles.td}>{u.username}</span>
-                <span style={styles.td}>
-                  <span style={{...styles.badge, background: u.role === 'admin' ? '#0EA5E9' : '#334155'}}>
-                    {u.role?.toUpperCase()}
+            users.map(u => {
+              const isVisible = visibleMap[u._id];
+              const passToShow = u.plainPassword || u.password || '';
+              return (
+                <div key={u._id} style={styles.row}>
+                  <span style={styles.nameCell}><strong>{u.name}</strong></span>
+                  <span style={styles.cell}>{u.username}</span>
+                  <span style={styles.cell}>
+                    <span style={{...styles.badge, background: u.role === 'admin'? '#0EA5E9' : '#334155'}}>
+                      {u.role?.toUpperCase()}
+                    </span>
                   </span>
-                </span>
-                <span style={{...styles.td, textAlign: 'right'}}>
-                  <button onClick={() => handleDeleteUser(u._id)} style={styles.delBtn}>Delete</button>
-                </span>
-              </div>
-            ))
+                  <span style={styles.passCell}>
+                    <span style={{flex:1}}>
+                      {isVisible? passToShow : '••••••••'}
+                    </span>
+                    <button type="button" onClick={() => toggleRow(u._id)} style={styles.eyeSmall}>
+                      {isVisible? '🙈' : '👁️'}
+                    </button>
+                  </span>
+                  <span style={{...styles.cell, textAlign:'right'}}>
+                    <button onClick={() => handleDeleteUser(u._id)} style={styles.delBtn}>Delete</button>
+                  </span>
+                </div>
+              );
+            })
           )}
         </div>
       </div>
@@ -114,35 +289,45 @@ export default function UserManagement({ currentUser }) {
 }
 
 const styles = {
-  card: { background: '#1E293B', padding: '24px', borderRadius: '12px', marginBottom: '24px', width: '100%', boxSizing: 'border-box' },
-  cardTitle: { marginTop: 0, color: '#F8FAFC', marginBottom: '16px' },
-  formGrid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' },
-  input: { padding: '14px', borderRadius: '8px', border: '1px solid #334155', background: '#F8FAFC', color: '#0F172A', fontSize: '0.95rem' },
-  createBtn: { marginTop: '16px', background: '#2CA636', color: '#FFF', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' },
+  container: { width: '100%', maxWidth: '100%' },
+  title: { color: '#F8FAFC', marginBottom: '4px' },
+  subtitle: { color: '#94A3B8', marginTop: 0, marginBottom: '20px' },
+  err: { background: '#7F1D1D', color: '#FECACA', padding: '12px', borderRadius: '8px', marginBottom: '16px' },
+  ok: { background: '#064E3B', color: '#A7F3D0', padding: '12px', borderRadius: '8px', marginBottom: '16px' },
+  card: { background: '#1E293B', padding: '28px', borderRadius: '12px', marginBottom: '24px', width: '100%', boxSizing: 'border-box' },
+  cardH: { marginTop: 0, color: '#F8FAFC', marginBottom: '16px' },
+  grid: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' },
+  input: { padding: '14px 16px', borderRadius: '8px', border: '1px solid #334155', background: '#F8FAFC', color: '#0F172A', fontSize: '0.95rem', boxSizing: 'border-box' },
+  passWrap: { position: 'relative', display: 'flex', alignItems: 'center' },
+  eyeBtn: { position: 'absolute', right: '12px', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '18px', lineHeight: 1 },
+  addBtn: { marginTop: '18px', background: '#2CA636', color: '#FFF', border: 'none', padding: '11px 22px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer' },
 
-  // THIS IS THE FIX - grid spreads across 100%
-  tableHeaderRow: {
+  // TABLE - THIS MAKES IT FILL THE WHOLE BLOCK
+  tableWrap: { width: '100%' },
+  thead: {
     display: 'grid',
-    gridTemplateColumns: '2fr 1.2fr 1fr 0.8fr', // spreads content across full div
+    gridTemplateColumns: '1.8fr 1.2fr 0.8fr 1.2fr 0.6fr',
     width: '100%',
-    padding: '12px 8px',
+    padding: '14px 10px',
     borderBottom: '1px solid #334155',
+    color: '#64748B',
+    fontSize: '0.78rem',
+    fontWeight: '700',
+    letterSpacing: '0.05em',
   },
-  tableBody: { width: '100%' },
-  tr: {
+  row: {
     display: 'grid',
-    gridTemplateColumns: '2fr 1.2fr 1fr 0.8fr', // same as header
+    gridTemplateColumns: '1.8fr 1.2fr 0.8fr 1.2fr 0.6fr',
     width: '100%',
     alignItems: 'center',
-    padding: '16px 8px',
+    padding: '18px 10px',
     borderBottom: '1px solid #1E293B',
   },
-  th: { color: '#64748B', fontSize: '0.8rem', fontWeight: '700', letterSpacing: '0.05em' },
-  td: { color: '#CBD5E1', fontSize: '0.95rem' },
-  tdName: { color: '#F8FAFC', fontSize: '0.95rem' },
-  badge: { padding: '4px 10px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: '700', color: '#FFF' },
-  delBtn: { background: '#DC2626', color: '#FFF', border: 'none', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' },
-  empty: { padding: '20px 8px', color: '#94A3B8' },
-  alertErr: { background: '#7F1D1D', color: '#FECACA', padding: '12px', borderRadius: '6px', marginBottom: '15px' },
-  alertOk: { background: '#064E3B', color: '#A7F3D0', padding: '12px', borderRadius: '6px', marginBottom: '15px' },
+  cell: { color: '#CBD5E1', fontSize: '0.95rem', paddingRight: '12px' },
+  nameCell: { color: '#F8FAFC', fontSize: '0.95rem', paddingRight: '12px' },
+  passCell: { color: '#CBD5E1', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '8px', paddingRight: '12px' },
+  badge: { padding: '4px 10px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: '800', color: '#FFF' },
+  delBtn: { background: '#DC2626', color: '#FFF', border: 'none', padding: '6px 14px', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '0.85rem' },
+  eyeSmall: { background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '16px' },
+  empty: { padding: '20px 10px', color: '#94A3B8' },
 };

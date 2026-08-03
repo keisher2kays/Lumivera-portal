@@ -238,3 +238,38 @@ html, body {
   top: 38px;
   width: auto;
 }
+
+
+/* ============ FIX for Installation Schedule + all 5-6 col tables ============ */
+.admin-table-wrap table {
+  min-width: 900px !important;
+  table-layout: auto !important;
+  width: max-content !important;
+}
+
+.admin-table-wrap table th {
+  white-space: nowrap !important;
+  padding: 14px 20px !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.04em;
+}
+
+/* Give each column breathing room */
+.admin-table-wrap table th:nth-child(1) { min-width: 140px; }
+.admin-table-wrap table th:nth-child(2) { min-width: 130px; }
+.admin-table-wrap table th:nth-child(3) { min-width: 160px; }
+.admin-table-wrap table th:nth-child(4) { min-width: 200px; }
+.admin-table-wrap table th:nth-child(5) { min-width: 120px; }
+.admin-table-wrap table th:nth-child(6) { min-width: 100px; }
+
+/* Hide that ugly white scrollbar track on dark bg */
+.admin-table-wrap::-webkit-scrollbar {
+  height: 8px;
+}
+.admin-table-wrap::-webkit-scrollbar-track {
+  background: #1E293B;
+}
+.admin-table-wrap::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 10px;
+}

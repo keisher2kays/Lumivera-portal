@@ -184,3 +184,54 @@ html, body {
     top: 38px;
     width: auto;
 }
+
+
+/* ====== Team Management Table Fix ====== */
+
+/* The card that holds Existing Team Members */
+.admin-table-card:has(table) {
+  width: 100%;
+}
+
+/* Force the table itself to fill the div */
+.admin-container table {
+  width: 100% !important;
+  min-width: 100% !important;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+/* Give each cell padding and space */
+.admin-container table th,
+.admin-container table td {
+  padding: 18px 16px !important;
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+  border-bottom: 1px solid #1E293B;
+}
+
+/* Distribute columns evenly */
+.admin-container table th:nth-child(1),
+.admin-container table td:nth-child(1) { width: 32%; }
+
+.admin-container table th:nth-child(2),
+.admin-container table td:nth-child(2) { width: 22%; }
+
+.admin-container table th:nth-child(3),
+.admin-container table td:nth-child(3) { width: 23%; }
+
+.admin-container table th:nth-child(4),
+.admin-container table td:nth-child(4) { 
+  width: 23%; 
+  text-align: right;
+}
+
+/* Header style */
+.admin-container table th {
+  color: #94A3B8;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

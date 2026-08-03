@@ -1,10 +1,16 @@
-.nav-logo-img{
-    position: relative;
-    top: 38px;
-    height: 193px;
-    width: auto;
-}
 /* src/AdminDashboard.css */
+
+/* ============ Prevent any horizontal page scroll ============ */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+.admin-container {
+  overflow-x: hidden;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
 
 /* ============ Base sizing bump for normal/desktop screens ============ */
 .admin-container {
@@ -31,6 +37,22 @@
 
 .admin-table-wrap table {
   min-width: 640px;
+}
+
+/* ============ Safety net: catch raw form/table elements from any child
+   component (e.g. UserManagement) that doesn't use the admin-* classes ============ */
+.admin-container * {
+  box-sizing: border-box;
+}
+
+.admin-container table {
+  max-width: 100%;
+}
+
+.admin-container table:not(.admin-table-wrap table) {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ============ Large desktop — make things a bit bigger ============ */
@@ -60,6 +82,11 @@
   .admin-alerts-panel {
     min-height: unset !important;
   }
+   .admin-logo-img {
+    height: 100px !important;
+    width: auto !important;
+  }
+
 }
 
 /* ============ Mobile ============ */
@@ -79,7 +106,8 @@
   }
 
   .admin-logo-img {
-    height: 28px !important;
+    height: 128px !important;
+    width: auto !important;
   }
 
   .admin-status-badge {
@@ -121,4 +149,38 @@
     font-size: 0.8rem;
     min-width: 560px;
   }
+
+  /* Safety net for child components without admin-* classes
+     (e.g. UserManagement's own form/table) */
+  .admin-container form {
+    width: 100%;
+  }
+
+  .admin-container form > div {
+    display: block !important;
+  }
+
+  .admin-container form > div > * {
+    width: 100% !important;
+    margin-bottom: 10px;
+  }
+
+  .admin-container input,
+  .admin-container select,
+  .admin-container textarea {
+    width: 100% !important;
+    box-sizing: border-box;
+    font-size: 16px; /* prevents iOS auto-zoom on focus */
+  }
+
+  .admin-container table {
+    font-size: 0.78rem;
+  }
+}
+
+.nav-logo-img {
+    height: 193px;
+    position: relative;
+    top: 38px;
+    width: auto;
 }

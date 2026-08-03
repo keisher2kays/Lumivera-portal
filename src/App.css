@@ -1,5 +1,3 @@
-
-
 /* ============ Prevent any horizontal page scroll ============ */
 html, body {
   overflow-x: hidden;
@@ -33,13 +31,16 @@ html, body {
 .admin-table-wrap {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-.admin-table-wrap table {
-  min-width: 640px;
+.admin-table-wrap::-webkit-scrollbar {
+  height: 6px;
 }
-
-/* ============ Safety net: catch raw form/table elements from any child
+.admin-table-wrap::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
 
 .admin-container * {
   box-sizing: border-box;
@@ -49,10 +50,53 @@ html, body {
   max-width: 100%;
 }
 
-.admin-container table:not(.admin-table-wrap table) {
-  display: block;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+/* ============ The card that holds Existing Team Members - DESKTOP ONLY ============ */
+.admin-table-card {
+  width: 100%;
+}
+
+.admin-container table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.admin-container table th,
+.admin-container table td {
+  padding: 18px 16px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid #1E293B;
+}
+
+/* Distribute columns evenly - DESKTOP */
+.admin-container table th:nth-child(1),
+.admin-container table td:nth-child(1) { width: 32%; }
+
+.admin-container table th:nth-child(2),
+.admin-container table td:nth-child(2) { width: 22%; }
+
+.admin-container table th:nth-child(3),
+.admin-container table td:nth-child(3) { width: 23%; }
+
+.admin-container table th:nth-child(4),
+.admin-container table td:nth-child(4) { 
+  width: 23%; 
+  text-align: right;
+}
+
+.admin-container table th:nth-child(5),
+.admin-container table td:nth-child(5) { 
+  width: 23%; 
+  text-align: right;
+}
+
+.admin-container table th {
+  color: #94A3B8;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* ============ Large desktop — make things a bit bigger ============ */
@@ -82,17 +126,16 @@ html, body {
   .admin-alerts-panel {
     min-height: unset !important;
   }
-   .admin-logo-img {
+  .admin-logo-img {
     height: 100px !important;
     width: auto !important;
   }
-
 }
 
-/* ============ Mobile ============ */
+/* ============ Mobile - FIXED ============ */
 @media (max-width: 640px) {
   .admin-container {
-    padding: 14px !important;
+    padding: 12px !important;
   }
 
   .admin-header {
@@ -102,67 +145,82 @@ html, body {
   }
 
   .admin-header h2 {
-    font-size: 1.2rem;
+    font-size: 1.1rem !important;
   }
 
   .admin-logo-img {
-    height: 128px !important;
+    height: 50px !important;
     width: auto !important;
   }
 
   .admin-status-badge {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     padding: 5px 10px;
+    white-space: nowrap;
   }
 
   .admin-nav-tabs {
-    flex-wrap: wrap;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
     gap: 8px !important;
+    padding-bottom: 8px;
   }
+  .admin-nav-tabs::-webkit-scrollbar { display: none; }
 
   .admin-tab-btn {
-    flex: 1 1 calc(50% - 8px);
-    font-size: 0.78rem;
-    padding: 8px 10px !important;
-    text-align: center;
+    flex: 0 0 auto !important;
+    font-size: 0.75rem;
+    padding: 8px 12px !important;
     white-space: nowrap;
   }
 
   .admin-chat-layout {
     grid-template-columns: 1fr !important;
-    gap: 14px !important;
+    gap: 12px !important;
   }
 
   .admin-chat-window {
-    height: 420px !important;
+    height: 380px !important;
   }
 
   .admin-table-card {
-    padding: 14px !important;
+    padding: 12px !important;
+    overflow-x: hidden;
   }
 
+  /* FORMS - 1 column on mobile */
   .admin-form-grid {
     grid-template-columns: 1fr !important;
+    gap: 10px !important;
   }
 
-  .admin-table-wrap table {
+  /* IMPORTANT: On mobile, allow tables to scroll, don't force 100% */
+  .admin-table-wrap {
+    width: 100%;
+    overflow-x: auto !important;
+  }
+
+  .admin-table-wrap table,
+  .admin-container table {
+    width: max-content !important;
+    min-width: 600px !important;
+    table-layout: auto !important;
+  }
+
+  .admin-container table th,
+  .admin-container table td {
+    padding: 12px 14px !important;
+    white-space: nowrap !important;
     font-size: 0.8rem;
-    min-width: 560px;
   }
 
-
+  /* Fix your UserManagement grid rows that were crushing */
+  div[style*="gridTemplateColumns"] {
+    min-width: 600px;
+  }
 
   .admin-container form {
     width: 100%;
-  }
-
-  .admin-container form > div {
-    display: block !important;
-  }
-
-  .admin-container form > div > * {
-    width: 100% !important;
-    margin-bottom: 10px;
   }
 
   .admin-container input,
@@ -170,68 +228,13 @@ html, body {
   .admin-container textarea {
     width: 100% !important;
     box-sizing: border-box;
-    font-size: 16px; /* prevents iOS auto-zoom on focus */
-  }
-
-  .admin-container table {
-    font-size: 0.78rem;
+    font-size: 16px;
   }
 }
 
 .nav-logo-img {
-    height: 193px;
-    position: relative;
-    top: 38px;
-    width: auto;
-}
-
-
-
-
-/* The card that holds Existing Team Members */
-.admin-table-card:has(table) {
-  width: 100%;
-}
-
-/* Force the table itself to fill the div */
-.admin-container table {
-  width: 100% !important;
-  min-width: 100% !important;
-  table-layout: fixed;
-  border-collapse: collapse;
-}
-
-/* Give each cell padding and space */
-.admin-container table th,
-.admin-container table td {
-  padding: 18px 16px !important;
-  text-align: left;
-  vertical-align: middle;
-  white-space: nowrap;
-  border-bottom: 1px solid #1E293B;
-}
-
-/* Distribute columns evenly */
-.admin-container table th:nth-child(1),
-.admin-container table td:nth-child(1) { width: 32%; }
-
-.admin-container table th:nth-child(2),
-.admin-container table td:nth-child(2) { width: 22%; }
-
-.admin-container table th:nth-child(3),
-.admin-container table td:nth-child(3) { width: 23%; }
-
-.admin-container table th:nth-child(4),
-.admin-container table td:nth-child(4) { 
-  width: 23%; 
-  text-align: right;
-}
-
-/* Header style */
-.admin-container table th {
-  color: #94A3B8;
-  font-size: 0.9rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  height: 193px;
+  position: relative;
+  top: 38px;
+  width: auto;
 }
